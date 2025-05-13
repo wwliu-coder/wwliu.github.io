@@ -1,4 +1,29 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WWLiu Blog</title><link>https://wwliu-coder.github.io/wwliu.github.io/</link><description>Recent content on WWLiu Blog</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 13 May 2025 16:41:42 +0800</lastBuildDate><atom:link href="https://wwliu-coder.github.io/wwliu.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Power</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/power/</link><pubDate>Tue, 13 May 2025 16:41:42 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/power/</guid><description>&lt;div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WWLiu Blog</title><link>https://wwliu-coder.github.io/wwliu.github.io/</link><description>Recent content on WWLiu Blog</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 13 May 2025 19:01:23 +0800</lastBuildDate><atom:link href="https://wwliu-coder.github.io/wwliu.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用Hugo和Github部署自定义博客</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hugo%E5%92%8Cgithub%E9%83%A8%E7%BD%B2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8D%9A%E5%AE%A2/</link><pubDate>Tue, 13 May 2025 19:01:23 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hugo%E5%92%8Cgithub%E9%83%A8%E7%BD%B2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>作为一个网上冲浪多年的浪子，白嫖客，CV战神，博主近期有一种特别想回馈社会的冲动，于是想把自己&amp;quot;求学经历&amp;quot;和实践结果记录一下，供后来者学习。&lt;/p>
+&lt;p>“工欲善其事必先利其器”，一个良好的分享地址是非常重要的。由于博主是shy人+功力不够，不想再B乎和某DN献丑，所以就有了下面部署的过程。&lt;/p>
+&lt;h1 id="工具介绍">工具介绍&lt;/h1>
+&lt;p>Hugo简介：基于Go编写的静态网站生成器，参考 &lt;a href="https://gohugo.com.cn/">https://gohugo.com.cn/&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># install&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget https://github.com/gohugoio/hugo/releases/download/v0.147.2/hugo_extended_0.147.2_Linux-64bit.tar.gz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tar -xvzf hugo_extended_0.147.2_Linux-64bit.tar.gz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mv hugo /usr/local/bin/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf hugo_extended_0.147.2_Linux-64bit.tar.gz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hugo version
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># how to use&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hugo new site my-blog &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> cd my-blog
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hugo new posts/hello-world.md &lt;span style="color:#75715e"># add something in this md file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hugo server --buildDrafts &lt;span style="color:#75715e"># visualization&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hugo &lt;span style="color:#75715e"># generate static web file into public&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>注意事项&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>记得把文章最上面的&lt;code>draft = true&lt;/code>改为&lt;code>false&lt;/code>&lt;/li>
+&lt;li>想博主这个blog是加了主题的，主题网址 &lt;a href="https://themes.gohugo.io/">https://themes.gohugo.io/&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>git init
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke themes/ananke
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#39;theme = &amp;#34;ananke&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; hugo.toml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="使用github部署">使用github部署&lt;/h1>
+&lt;p>使用github部署这里需要先将仓库建立起来，并且得导入我们之前的在public生成的静态网址，博主参考的是github官方的博客 &lt;a href="https://pages.github.com/">https://pages.github.com/&lt;/a>, 值得注意的是这里必须是 &lt;strong>usrname.github.io&lt;/strong> 这种格式的。&lt;/p></description></item><item><title>Power</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/power/</link><pubDate>Tue, 13 May 2025 16:41:42 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/power/</guid><description>&lt;div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
  &lt;p style="font-weight: bold;">遇见即是缘分，V我5块，看看实力&lt;/p>
  &lt;p style="display: flex;">
  &lt;img src="https://wwliu-coder.github.io/wwliu.github.io/images/yeah.gif" width="200" />
