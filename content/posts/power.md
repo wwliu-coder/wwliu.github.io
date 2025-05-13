@@ -4,4 +4,4 @@ draft = false
 title = 'Power'
 +++
 # 茫茫众生，遇见既是缘分，不如结个善缘，V老衲50，看看实力
-![实力]( /static/images/power.png )
+![实力]( /images/power.png )
