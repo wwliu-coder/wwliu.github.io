@@ -4,5 +4,7 @@ draft = false
 title = 'Power'
 +++
 # 遇见即是缘分，V50，看看实力
-![实力]( /wwliu.github.io/images/power.png )
-![Yeah]( /wwliu.github.io/images/yeah.gif )
+<p>
+  <img src="/images/power.png" width="100" />
+  <img src="/images/yeah.gif" width="100" />
+</p>

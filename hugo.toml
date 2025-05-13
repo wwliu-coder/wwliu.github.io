@@ -2,3 +2,7 @@ baseURL = 'https://wwliu-coder.github.io/wwliu.github.io/'
 languageCode = 'zh-CN'
 title = 'WWLiu Blog'
 theme = "no-style-please"
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
