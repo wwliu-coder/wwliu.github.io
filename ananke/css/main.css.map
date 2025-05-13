@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "main.css",
-	"sourceRoot": "/home/runner/work/wwliu.github.io/wwliu.github.io",
+	"sourceRoot": "/home/liuwei12/ws/mysite",
 	"sources": [
 		"ananke/css/main.css"
 	],
