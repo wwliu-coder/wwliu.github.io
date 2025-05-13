@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="作为一个网上冲浪多年的浪子，白嫖客，CV战神，博主近期有一种特别想回馈社会的冲动，于是想把自己&quot;求学经历&quot;和实践结果记录一下，供后来者学习。
+“工欲善其事必先利其器”，一个良好的分享地址是非常重要的。由于博主是shy人&#43;功力不够，不想再B乎和某DN献丑，所以就有了下面部署的过程。
+工具介绍
+Hugo简介：基于Go编写的静态网站生成器，参考 https://gohugo.com.cn/
+# install
+wget https://github.com/gohugoio/hugo/releases/download/v0.147.2/hugo_extended_0.147.2_Linux-64bit.tar.gz
+tar -xvzf hugo_extended_0.147.2_Linux-64bit.tar.gz
+sudo mv hugo /usr/local/bin/
+rm -rf hugo_extended_0.147.2_Linux-64bit.tar.gz
+hugo version
+
+# how to use
+hugo new site my-blog &amp;&amp; cd my-blog
+hugo new posts/hello-world.md # add something in this md file
+hugo server --buildDrafts # visualization
+hugo # generate static web file into public
+注意事项
+
+记得把文章最上面的draft = true改为false
+想博主这个blog是加了主题的，主题网址 https://themes.gohugo.io/
+
+git init
+git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke themes/ananke
+echo &#39;theme = &#34;ananke&#34;&#39; &gt;&gt; hugo.toml
+使用github部署
+使用github部署这里需要先将仓库建立起来，并且得导入我们之前的在public生成的静态网址，博主参考的是github官方的博客 https://pages.github.com/, 值得注意的是这里必须是 usrname.github.io 这种格式的。">  
+
+  <title>
+    
+      如何使用Hugo和Github部署自定义博客
+    
+  </title>
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/wwliu.github.io/" />
+  
+  
+  
+  <link rel="stylesheet" href="/wwliu.github.io/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css" integrity="sha512-UWUjAtOpmL94h67Vws&#43;JFBu&#43;vfRaLI&#43;HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+                <div class="post-meta">
+                    <a href="/wwliu.github.io/">..</a>
+
+                    <p>
+                        <time datetime="2025-05-13 19:01:23 &#43;0800 CST">
+                            2025-05-13
+                        </time>
+                    </p>
+                </div>
+
+<article>
+    <h1>如何使用Hugo和Github部署自定义博客</h1>
+
+    
+
+    <p>作为一个网上冲浪多年的浪子，白嫖客，CV战神，博主近期有一种特别想回馈社会的冲动，于是想把自己&quot;求学经历&quot;和实践结果记录一下，供后来者学习。</p>
+<p>“工欲善其事必先利其器”，一个良好的分享地址是非常重要的。由于博主是shy人+功力不够，不想再B乎和某DN献丑，所以就有了下面部署的过程。</p>
+<h1 id="工具介绍">工具介绍</h1>
+<p>Hugo简介：基于Go编写的静态网站生成器，参考 <a href="https://gohugo.com.cn/">https://gohugo.com.cn/</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># install</span>
+</span></span><span style="display:flex;"><span>wget https://github.com/gohugoio/hugo/releases/download/v0.147.2/hugo_extended_0.147.2_Linux-64bit.tar.gz
+</span></span><span style="display:flex;"><span>tar -xvzf hugo_extended_0.147.2_Linux-64bit.tar.gz
+</span></span><span style="display:flex;"><span>sudo mv hugo /usr/local/bin/
+</span></span><span style="display:flex;"><span>rm -rf hugo_extended_0.147.2_Linux-64bit.tar.gz
+</span></span><span style="display:flex;"><span>hugo version
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># how to use</span>
+</span></span><span style="display:flex;"><span>hugo new site my-blog <span style="color:#f92672">&amp;&amp;</span> cd my-blog
+</span></span><span style="display:flex;"><span>hugo new posts/hello-world.md <span style="color:#75715e"># add something in this md file</span>
+</span></span><span style="display:flex;"><span>hugo server --buildDrafts <span style="color:#75715e"># visualization</span>
+</span></span><span style="display:flex;"><span>hugo <span style="color:#75715e"># generate static web file into public</span>
+</span></span></code></pre></div><p><strong>注意事项</strong></p>
+<ol>
+<li>记得把文章最上面的<code>draft = true</code>改为<code>false</code></li>
+<li>想博主这个blog是加了主题的，主题网址 <a href="https://themes.gohugo.io/">https://themes.gohugo.io/</a></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git init
+</span></span><span style="display:flex;"><span>git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke themes/ananke
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;theme = &#34;ananke&#34;&#39;</span> &gt;&gt; hugo.toml
+</span></span></code></pre></div><h1 id="使用github部署">使用github部署</h1>
+<p>使用github部署这里需要先将仓库建立起来，并且得导入我们之前的在public生成的静态网址，博主参考的是github官方的博客 <a href="https://pages.github.com/">https://pages.github.com/</a>, 值得注意的是这里必须是 <strong>usrname.github.io</strong> 这种格式的。</p>
+<ol>
+<li>创建仓库，把之前创建好的内容直接导入到新仓库</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">(</span>base<span style="color:#f92672">)</span> username@HOST-10-211-41-34:~/ws/wwliu.github.io$ tree -L <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>├── archetypes
+</span></span><span style="display:flex;"><span>│   └── default.md
+</span></span><span style="display:flex;"><span>├── assets
+</span></span><span style="display:flex;"><span>├── content
+</span></span><span style="display:flex;"><span>│   └── posts
+</span></span><span style="display:flex;"><span>├── data
+</span></span><span style="display:flex;"><span>├── hugo.toml
+</span></span><span style="display:flex;"><span>├── i18n
+</span></span><span style="display:flex;"><span>├── layouts
+</span></span><span style="display:flex;"><span>├── public
+</span></span><span style="display:flex;"><span>│   ├── 404.html
+</span></span><span style="display:flex;"><span>│   ├── ananke
+</span></span><span style="display:flex;"><span>│   ├── categories
+</span></span><span style="display:flex;"><span>│   ├── css
+</span></span><span style="display:flex;"><span>│   ├── images
+</span></span><span style="display:flex;"><span>│   ├── index.html
+</span></span><span style="display:flex;"><span>│   ├── index.xml
+</span></span><span style="display:flex;"><span>│   ├── posts
+</span></span><span style="display:flex;"><span>│   ├── sitemap.xml
+</span></span><span style="display:flex;"><span>│   └── tags
+</span></span><span style="display:flex;"><span>├── resources
+</span></span><span style="display:flex;"><span>│   └── _gen
+</span></span><span style="display:flex;"><span>├── static
+</span></span><span style="display:flex;"><span>│   └── images
+</span></span><span style="display:flex;"><span>└── themes
+</span></span><span style="display:flex;"><span>    └── no-style-please
+</span></span></code></pre></div><ol start="2">
+<li>在本地创建两个分支 <strong>main</strong> 和 <strong>gh-pages</strong>，分别是主分支（所有代码）和发布分支（只包括生成后的内容）</li>
+<li>在主分支添加 Github Actions 支持的配置文件，因为需要自动化同步内容到发布分支</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#75715e"># .github/workflows/deploy.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Deploy Hugo site to GitHub Pages</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">push</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">branches</span>: [<span style="color:#ae81ff">main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">permissions</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">contents</span>: <span style="color:#ae81ff">write</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pages</span>: <span style="color:#ae81ff">write</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">id-token</span>: <span style="color:#ae81ff">write</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">deploy</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v3</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">submodules</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Setup Hugo</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">peaceiris/actions-hugo@v2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">hugo-version</span>: <span style="color:#e6db74">&#39;0.147.2&#39;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">extended</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          hugo --minify
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          ls -lah ./public</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Deploy</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">peaceiris/actions-gh-pages@v3</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">github_token</span>: <span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">publish_dir</span>: <span style="color:#ae81ff">./public</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">publish_branch</span>: <span style="color:#ae81ff">gh-pages</span>
+</span></span></code></pre></div><ol start="4">
+<li>每次把生产改好的代码推到主分支上就可以看到自动化部署的流程，这里可以参考我的 <a href="https://github.com/wwliu-coder/wwliu.github.io/actions">https://github.com/wwliu-coder/wwliu.github.io/actions</a></li>
+<li>部署流程结果后就可以在你的仓库连接看到了 <a href="https://wwliu-coder.github.io/wwliu.github.io/">https://wwliu-coder.github.io/wwliu.github.io/</a></li>
+</ol>
+<h1 id="踩坑记录">踩坑记录</h1>
+<ol>
+<li>推代码前记得hugo生产一下静态网页</li>
+<li>需要替换对应的地址，否则有些图片不能正常加载</li>
+</ol>
+<pre tabindex="0"><code># hugo.toml 中baseURL
+baseURL = &#39;https://wwliu-coder.github.io/wwliu.github.io/&#39;
+languageCode = &#39;zh-CN&#39;
+title = &#39;WWLiu Blog&#39;
+theme = &#34;no-style-please&#34;
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>&lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display: flex;&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/wwliu.github.io/images/yeah.gif&#34;</span> <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;200&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/wwliu.github.io/images/power.png&#34;</span> <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;200&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/wwliu.github.io/images/yeah.gif&#34;</span> <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;200&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span></code></pre></div><hr>
+<p>还有一件重要的事情，最近博主发现网上分享的东西越来越简单，都没有那种纯小白的分享过程，导致自己在创建过程也是踩过很多坑，所以后面的过程也是手把手教学，如果你觉得本人分享的东西还算有用，V5yuan，看看实力。</p>
+<p style="display: flex;">
+    <img src="/wwliu.github.io/images/yeah.gif" width="200" />
+    <img src="/wwliu.github.io/images/power.png" width="200" />
+    <img src="/wwliu.github.io/images/yeah.gif" width="200" />
+</p>
+</article>
+
+            </div>
+        </main>
+    </body></html>
