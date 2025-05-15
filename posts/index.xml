@@ -1,4 +1,57 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on WWLiu Blog</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/</link><description>Recent content in Posts on WWLiu Blog</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 13 May 2025 19:01:23 +0800</lastBuildDate><atom:link href="https://wwliu-coder.github.io/wwliu.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用Hugo和Github部署自定义博客</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hugo%E5%92%8Cgithub%E9%83%A8%E7%BD%B2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8D%9A%E5%AE%A2/</link><pubDate>Tue, 13 May 2025 19:01:23 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hugo%E5%92%8Cgithub%E9%83%A8%E7%BD%B2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>作为一个网上冲浪多年的浪子，白嫖客，CV战神，博主近期有一种特别想回馈社会的冲动，于是想把自己&amp;quot;求学经历&amp;quot;和实践结果记录一下，供后来者学习。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on WWLiu Blog</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/</link><description>Recent content in Posts on WWLiu Blog</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Wed, 14 May 2025 11:23:16 +0800</lastBuildDate><atom:link href="https://wwliu-coder.github.io/wwliu.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>如何从源码安装redis</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85redis/</link><pubDate>Wed, 14 May 2025 11:23:16 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85redis/</guid><description>&lt;p>由于博主比较菜，连redis是什么都没接触过，另外近期想冲一下大厂，所以最近会就redis相关的问题总结成一个专题，那么开始吧。&lt;/p>
+&lt;h1 id="专题一安装源码并总结redis代码整体结构">专题一：安装源码并总结redis代码整体结构&lt;/h1>
+&lt;p>&lt;strong>1. 安装源码&lt;/strong>&lt;/p>
+&lt;p>源码安装参考：&lt;a href="https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/">https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Update development tools and libraries&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt-get update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt-get install -y sudo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt-get install -y --no-install-recommends &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ca-certificates &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> wget &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> dpkg-dev &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> gcc &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> g++ &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> libc6-dev &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> libssl-dev &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> make &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> git &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> python3 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> python3-pip &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> python3-venv &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> python3-dev &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> unzip &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> rsync &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> clang &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> automake &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> autoconf &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> gcc-10 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> g++-10 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> libtool
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 &lt;span style="color:#ae81ff">100&lt;/span> --slave /usr/bin/g++ g++ /usr/bin/g++-10
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip3 install cmake&lt;span style="color:#f92672">==&lt;/span>3.31.6
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo ln -sf /usr/local/bin/cmake /usr/bin/cmake
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake --version
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Download source code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -O redis-8.0.0.tar.gz https://github.com/redis/redis/archive/refs/tags/8.0.0.tar.gz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tar xvf redis-8.0.0.tar.gz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm -rf redis-8.0.0.tar.gz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Make&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make -j &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>nproc&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span> all
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo make install
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>redis-server --version
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>redis-cli --version
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Testing&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make test
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Start redis-server with redis.conf&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>redis-server redis.conf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>redis-cli INFO &lt;span style="color:#75715e"># in another bash&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>2. 源码结构剖析&lt;/strong>&lt;/p></description></item><item><title>如何使用Hugo和Github部署自定义博客</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hugo%E5%92%8Cgithub%E9%83%A8%E7%BD%B2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8D%9A%E5%AE%A2/</link><pubDate>Tue, 13 May 2025 19:01:23 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hugo%E5%92%8Cgithub%E9%83%A8%E7%BD%B2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8D%9A%E5%AE%A2/</guid><description>&lt;p>作为一个网上冲浪多年的浪子，白嫖客，CV战神，博主近期有一种特别想回馈社会的冲动，于是想把自己&amp;quot;求学经历&amp;quot;和实践结果记录一下，供后来者学习。&lt;/p>
 &lt;p>“工欲善其事必先利其器”，一个良好的分享地址是非常重要的。由于博主是shy人+功力不够，不想再B乎和某DN献丑，所以就有了下面部署的过程。&lt;/p>
 &lt;h1 id="工具介绍">工具介绍&lt;/h1>
 &lt;p>Hugo简介：基于Go编写的静态网站生成器，参考 &lt;a href="https://gohugo.com.cn/">https://gohugo.com.cn/&lt;/a>&lt;/p>
