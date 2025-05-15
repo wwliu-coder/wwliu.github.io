@@ -1,5 +1,26 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on WWLiu Blog</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/</link><description>Recent content in Posts on WWLiu Blog</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Wed, 14 May 2025 11:23:16 +0800</lastBuildDate><atom:link href="https://wwliu-coder.github.io/wwliu.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>如何从源码安装redis</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85redis/</link><pubDate>Wed, 14 May 2025 11:23:16 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85redis/</guid><description>&lt;p>由于博主比较菜，连redis是什么都没接触过，另外近期想冲一下大厂，所以最近会就redis相关的问题总结成一个专题，那么开始吧。&lt;/p>
-&lt;h1 id="专题一安装源码并总结redis代码整体结构">专题一：安装源码并总结redis代码整体结构&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on WWLiu Blog</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/</link><description>Recent content in Posts on WWLiu Blog</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Thu, 15 May 2025 14:50:04 +0800</lastBuildDate><atom:link href="https://wwliu-coder.github.io/wwliu.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Redis功能模块与源码对应</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/redis%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E4%B8%8E%E6%BA%90%E7%A0%81%E5%AF%B9%E5%BA%94/</link><pubDate>Thu, 15 May 2025 14:50:04 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/redis%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E4%B8%8E%E6%BA%90%E7%A0%81%E5%AF%B9%E5%BA%94/</guid><description>&lt;h1 id="02安装源码并总结redis代码整体结构">02：安装源码并总结redis代码整体结构&lt;/h1>
+&lt;p>按照 Redis 的服务器实例、数据库操作、可靠性和可扩展性保证、辅助功能四个维度，把 Redis 功能源码梳理成了四条代码路径&lt;/p>
+&lt;p>&lt;strong>服务器实例&lt;/strong>&lt;/p>
+&lt;img src="https://wwliu-coder.github.io/wwliu.github.io/images/redis_server.png" />
+&lt;p>&lt;strong>数据库数据类型与操作&lt;/strong>&lt;/p>
+&lt;img src="https://wwliu-coder.github.io/wwliu.github.io/images/redis_data.png" />
+&lt;img src="https://wwliu-coder.github.io/wwliu.github.io/images/redis_db.png" />
+&lt;p>&lt;strong>高可靠性和高可扩展性&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>数据持久化实现&lt;/li>
+&lt;/ol>
+&lt;p>Redis 的数据持久化实现有两种方式：内存快照 RDB 和 AOF 日志，分别实现在了 rdb.h/rdb.c 和 aof.c 中
+在使用 RDB 或 AOF 对数据库进行恢复时，RDB 和 AOF 文件可能会因为 Redis 实例所在服务器宕机，而未能完整保存，进而会影响到数据库恢复。因此针对这一问题，Redis 还实现了对这两类文件的检查功能，对应的代码文件分别是 redis-check-rdb.c 和 redis-check-aof.c。&lt;/p>
+&lt;ol start="2">
+&lt;li>主从复制功能实现&lt;/li>
+&lt;/ol>
+&lt;p>Redis 把主从复制功能实现在了 replication.c 文件中。
+另外你还需要知道的是，Redis 的主从集群在进行恢复时，主要是依赖于哨兵机制，而这部分功能则直接实现在了 sentinel.c 文件中。
+与 Redis 实现高可靠性保证的功能类似，Redis 高可扩展性保证的功能，是通过 Redis Cluster 来实现的，这部分代码也非常集中，就是在 cluster.h/cluster.c 代码文件中。&lt;/p>
+&lt;p>&lt;strong>辅助功能&lt;/strong>&lt;/p>
+&lt;p>Redis 还实现了一些用于支持系统运维的辅助功能。比如，为了便于运维人员查看分析不同操作的延迟产生来源，Redis 在 latency.h/latency.c 中实现了操作延迟监控的功能；为了便于运维人员查找运行过慢的操作命令，Redis 在 slowlog.h/slowlog.c 中实现了慢命令的记录功能，等等。&lt;/p>
+&lt;p>此外，运维人员有时还需要了解 Redis 的性能表现，为了支持这一目标，Redis 实现了对系统进行性能评测的功能，这部分代码在 redis-benchmark.c 中。如果你想要了解如何对 Redis 开展性能测试，这个代码文件也值得一读。&lt;/p></description></item><item><title>如何从源码安装redis</title><link>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85redis/</link><pubDate>Wed, 14 May 2025 11:23:16 +0800</pubDate><guid>https://wwliu-coder.github.io/wwliu.github.io/posts/%E5%A6%82%E4%BD%95%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85redis/</guid><description>&lt;p>由于博主比较菜，连redis是什么都没接触过，另外近期想冲一下大厂，所以最近会就redis相关的问题总结成一个专题，那么开始吧。&lt;/p>
+&lt;h1 id="01安装源码并总结redis代码整体结构">01：安装源码并总结redis代码整体结构&lt;/h1>
 &lt;p>&lt;strong>1. 安装源码&lt;/strong>&lt;/p>
 &lt;p>源码安装参考：&lt;a href="https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/">https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/&lt;/a>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Update development tools and libraries&lt;/span>
