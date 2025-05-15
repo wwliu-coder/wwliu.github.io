@@ -5,7 +5,7 @@ title = '如何从源码安装redis'
 +++
 由于博主比较菜，连redis是什么都没接触过，另外近期想冲一下大厂，所以最近会就redis相关的问题总结成一个专题，那么开始吧。
 
-# 专题一：安装源码并总结redis代码整体结构
+# 01：安装源码并总结redis代码整体结构
 **1. 安装源码**
 
 源码安装参考：[https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/](https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/)
