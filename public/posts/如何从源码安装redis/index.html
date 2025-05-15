@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="由于博主比较菜，连redis是什么都没接触过，另外近期想冲一下大厂，所以最近会就redis相关的问题总结成一个专题，那么开始吧。
+专题一：安装源码并总结redis代码整体结构
+1. 安装源码
+源码安装参考：https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/
+# Update development tools and libraries
+apt-get update
+apt-get install -y sudo
+sudo apt-get install -y --no-install-recommends \
+    ca-certificates \
+    wget \
+    dpkg-dev \
+    gcc \
+    g&#43;&#43; \
+    libc6-dev \
+    libssl-dev \
+    make \
+    git \
+    python3 \
+    python3-pip \
+    python3-venv \
+    python3-dev \
+    unzip \
+    rsync \
+    clang \
+    automake \
+    autoconf \
+    gcc-10 \
+    g&#43;&#43;-10 \
+    libtool
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g&#43;&#43; g&#43;&#43; /usr/bin/g&#43;&#43;-10
+
+pip3 install cmake==3.31.6
+sudo ln -sf /usr/local/bin/cmake /usr/bin/cmake
+cmake --version
+
+# Download source code
+wget -O redis-8.0.0.tar.gz https://github.com/redis/redis/archive/refs/tags/8.0.0.tar.gz
+tar xvf redis-8.0.0.tar.gz
+rm -rf redis-8.0.0.tar.gz
+
+# Make
+make -j &#34;$(nproc)&#34; all
+sudo make install
+redis-server --version
+redis-cli --version
+
+# Testing
+make test
+
+# Start redis-server with redis.conf
+redis-server redis.conf
+redis-cli INFO # in another bash
+2. 源码结构剖析">  
+
+  <title>
+    
+      如何从源码安装redis
+    
+  </title>
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/wwliu.github.io/" />
+  
+  
+  
+  <link rel="stylesheet" href="/wwliu.github.io/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css" integrity="sha512-UWUjAtOpmL94h67Vws&#43;JFBu&#43;vfRaLI&#43;HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+                <div class="post-meta">
+                    <a href="/wwliu.github.io/">..</a>
+
+                    <p>
+                        <time datetime="2025-05-14 11:23:16 &#43;0800 CST">
+                            2025-05-14
+                        </time>
+                    </p>
+                </div>
+
+<article>
+    <h1>如何从源码安装redis</h1>
+
+    
+
+    <p>由于博主比较菜，连redis是什么都没接触过，另外近期想冲一下大厂，所以最近会就redis相关的问题总结成一个专题，那么开始吧。</p>
+<h1 id="专题一安装源码并总结redis代码整体结构">专题一：安装源码并总结redis代码整体结构</h1>
+<p><strong>1. 安装源码</strong></p>
+<p>源码安装参考：<a href="https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/">https://redis.io/docs/latest/operate/oss_and_stack/install/build-stack/ubuntu-focal/</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Update development tools and libraries</span>
+</span></span><span style="display:flex;"><span>apt-get update
+</span></span><span style="display:flex;"><span>apt-get install -y sudo
+</span></span><span style="display:flex;"><span>sudo apt-get install -y --no-install-recommends <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    ca-certificates <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    wget <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    dpkg-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    gcc <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    g++ <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    libc6-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    libssl-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    make <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    git <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    python3 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    python3-pip <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    python3-venv <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    python3-dev <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    unzip <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    rsync <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    clang <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    automake <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    autoconf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    gcc-10 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    g++-10 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    libtool
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 <span style="color:#ae81ff">100</span> --slave /usr/bin/g++ g++ /usr/bin/g++-10
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pip3 install cmake<span style="color:#f92672">==</span>3.31.6
+</span></span><span style="display:flex;"><span>sudo ln -sf /usr/local/bin/cmake /usr/bin/cmake
+</span></span><span style="display:flex;"><span>cmake --version
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Download source code</span>
+</span></span><span style="display:flex;"><span>wget -O redis-8.0.0.tar.gz https://github.com/redis/redis/archive/refs/tags/8.0.0.tar.gz
+</span></span><span style="display:flex;"><span>tar xvf redis-8.0.0.tar.gz
+</span></span><span style="display:flex;"><span>rm -rf redis-8.0.0.tar.gz
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Make</span>
+</span></span><span style="display:flex;"><span>make -j <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>nproc<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> all
+</span></span><span style="display:flex;"><span>sudo make install
+</span></span><span style="display:flex;"><span>redis-server --version
+</span></span><span style="display:flex;"><span>redis-cli --version
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Testing</span>
+</span></span><span style="display:flex;"><span>make test
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Start redis-server with redis.conf</span>
+</span></span><span style="display:flex;"><span>redis-server redis.conf
+</span></span><span style="display:flex;"><span>redis-cli INFO <span style="color:#75715e"># in another bash</span>
+</span></span></code></pre></div><p><strong>2. 源码结构剖析</strong></p>
+<p>源码结构剖析参考极客时间的大佬，如图所示
+<img src="/wwliu.github.io/images/redis_structure.png"/></p>
+<ol>
+<li>deps 目录</li>
+</ol>
+<p>主要是redis依赖的第三方库，包括 Redis 的 C 语言版本客户端代码 hiredis、jemalloc 内存分配器代码、readline 功能的替代代码 linenoise，以及 lua 脚本代码</p>
+<ol start="2">
+<li>src 目录</li>
+</ol>
+<p>包含了 Redis 所有功能模块的代码文件，也是 Redis 源码的重要组成部分</p>
+<ol start="3">
+<li>tests 目录</li>
+</ol>
+<p>Redis 实现的测试代码可以分成四部分，分别是单元测试（对应 unit 子目录），Redis Cluster 功能测试（对应 cluster 子目录）、哨兵功能测试（对应 sentinel 子目录）、主从复制功能测试（对应 integration 子目录）。</p>
+<ol start="4">
+<li>utils 目录</li>
+</ol>
+<p>属于辅助性功能，包括用于创建 Redis Cluster 的脚本、用于测试 LRU 算法效果的程序，以及可视化 rehash 过程的程序</p>
+<ol start="5">
+<li>配置文件</li>
+</ol>
+<p>Redis 源码总目录下其实还包含了两个重要的配置文件，一个是 Redis 实例的配置文件 redis.conf，另一个是哨兵的配置文件 sentinel.conf</p>
+<p>附上我下载的redis-8.0.0版本的本地文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">(</span>base<span style="color:#f92672">)</span> usrname@HOST-xx-xx-xx-xx:~/ws/redis-8.0.0$ tree -L <span style="color:#ae81ff">2</span> -I <span style="color:#e6db74">&#39;*.o&#39;</span>
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>├── 00-RELEASENOTES
+</span></span><span style="display:flex;"><span>├── BUGS
+</span></span><span style="display:flex;"><span>├── CODE_OF_CONDUCT.md
+</span></span><span style="display:flex;"><span>├── CONTRIBUTING.md
+</span></span><span style="display:flex;"><span>├── INSTALL
+</span></span><span style="display:flex;"><span>├── LICENSE.txt
+</span></span><span style="display:flex;"><span>├── MANIFESTO
+</span></span><span style="display:flex;"><span>├── Makefile
+</span></span><span style="display:flex;"><span>├── README.md
+</span></span><span style="display:flex;"><span>├── REDISCONTRIBUTIONS.txt
+</span></span><span style="display:flex;"><span>├── SECURITY.md
+</span></span><span style="display:flex;"><span>├── TLS.md
+</span></span><span style="display:flex;"><span>├── codecov.yml
+</span></span><span style="display:flex;"><span>├── deps
+</span></span><span style="display:flex;"><span>│   ├── Makefile
+</span></span><span style="display:flex;"><span>│   ├── README.md
+</span></span><span style="display:flex;"><span>│   ├── fast_float
+</span></span><span style="display:flex;"><span>│   ├── fpconv
+</span></span><span style="display:flex;"><span>│   ├── hdr_histogram
+</span></span><span style="display:flex;"><span>│   ├── hiredis
+</span></span><span style="display:flex;"><span>│   ├── jemalloc
+</span></span><span style="display:flex;"><span>│   ├── linenoise
+</span></span><span style="display:flex;"><span>│   └── lua
+</span></span><span style="display:flex;"><span>├── dump.rdb
+</span></span><span style="display:flex;"><span>├── modules
+</span></span><span style="display:flex;"><span>│   ├── Makefile
+</span></span><span style="display:flex;"><span>│   ├── common.mk
+</span></span><span style="display:flex;"><span>│   ├── redisbloom
+</span></span><span style="display:flex;"><span>│   ├── redisearch
+</span></span><span style="display:flex;"><span>│   ├── redisjson
+</span></span><span style="display:flex;"><span>│   ├── redistimeseries
+</span></span><span style="display:flex;"><span>│   └── vector-sets
+</span></span><span style="display:flex;"><span>├── redis-full.conf
+</span></span><span style="display:flex;"><span>├── redis.conf
+</span></span><span style="display:flex;"><span>├── runtest
+</span></span><span style="display:flex;"><span>├── runtest-cluster
+</span></span><span style="display:flex;"><span>├── runtest-moduleapi
+</span></span><span style="display:flex;"><span>├── runtest-sentinel
+</span></span><span style="display:flex;"><span>├── sentinel.conf
+</span></span><span style="display:flex;"><span>├── src
+</span></span><span style="display:flex;"><span>│   ├── Makefile
+</span></span><span style="display:flex;"><span>│   ├── Makefile.dep
+</span></span><span style="display:flex;"><span>│   ├── acl.c
+</span></span><span style="display:flex;"><span>│   ├── acl.d
+</span></span><span style="display:flex;"><span>│   ├── adlist.c
+</span></span><span style="display:flex;"><span>│   ├── adlist.d
+</span></span><span style="display:flex;"><span>│   ├── adlist.h
+</span></span><span style="display:flex;"><span>│   ├── ae.c
+</span></span><span style="display:flex;"><span>│   ├── ae.d
+</span></span><span style="display:flex;"><span>│   ├── ae.h
+</span></span><span style="display:flex;"><span>│   ├── ae_epoll.c
+</span></span><span style="display:flex;"><span>│   ├── ae_evport.c
+</span></span><span style="display:flex;"><span>│   ├── ae_kqueue.c
+</span></span><span style="display:flex;"><span>│   ├── ae_select.c
+</span></span><span style="display:flex;"><span>│   ├── anet.c
+</span></span><span style="display:flex;"><span>│   ├── anet.d
+</span></span><span style="display:flex;"><span>│   ├── anet.h
+</span></span><span style="display:flex;"><span>│   ├── aof.c
+</span></span><span style="display:flex;"><span>│   ├── aof.d
+</span></span><span style="display:flex;"><span>│   ├── asciilogo.h
+</span></span><span style="display:flex;"><span>│   ├── atomicvar.h
+</span></span><span style="display:flex;"><span>│   ├── bio.c
+</span></span><span style="display:flex;"><span>│   ├── bio.d
+</span></span><span style="display:flex;"><span>│   ├── bio.h
+</span></span><span style="display:flex;"><span>│   ├── bitops.c
+</span></span><span style="display:flex;"><span>│   ├── bitops.d
+</span></span><span style="display:flex;"><span>│   ├── blocked.c
+</span></span><span style="display:flex;"><span>│   ├── blocked.d
+</span></span><span style="display:flex;"><span>│   ├── cJSON.d
+</span></span><span style="display:flex;"><span>│   ├── call_reply.c
+</span></span><span style="display:flex;"><span>│   ├── call_reply.d
+</span></span><span style="display:flex;"><span>│   ├── call_reply.h
+</span></span><span style="display:flex;"><span>│   ├── childinfo.c
+</span></span><span style="display:flex;"><span>│   ├── childinfo.d
+</span></span><span style="display:flex;"><span>│   ├── cli_commands.c
+</span></span><span style="display:flex;"><span>│   ├── cli_commands.d
+</span></span><span style="display:flex;"><span>│   ├── cli_commands.h
+</span></span><span style="display:flex;"><span>│   ├── cli_common.c
+</span></span><span style="display:flex;"><span>│   ├── cli_common.d
+</span></span><span style="display:flex;"><span>│   ├── cli_common.h
+</span></span><span style="display:flex;"><span>│   ├── cluster.c
+</span></span><span style="display:flex;"><span>│   ├── cluster.d
+</span></span><span style="display:flex;"><span>│   ├── cluster.h
+</span></span><span style="display:flex;"><span>│   ├── cluster_legacy.c
+</span></span><span style="display:flex;"><span>│   ├── cluster_legacy.d
+</span></span><span style="display:flex;"><span>│   ├── cluster_legacy.h
+</span></span><span style="display:flex;"><span>│   ├── commands
+</span></span><span style="display:flex;"><span>│   ├── commands.c
+</span></span><span style="display:flex;"><span>│   ├── commands.d
+</span></span><span style="display:flex;"><span>│   ├── commands.def
+</span></span><span style="display:flex;"><span>│   ├── commands.h
+</span></span><span style="display:flex;"><span>│   ├── config.c
+</span></span><span style="display:flex;"><span>│   ├── config.d
+</span></span><span style="display:flex;"><span>│   ├── config.h
+</span></span><span style="display:flex;"><span>│   ├── connection.c
+</span></span><span style="display:flex;"><span>│   ├── connection.d
+</span></span><span style="display:flex;"><span>│   ├── connection.h
+</span></span><span style="display:flex;"><span>│   ├── connhelpers.h
+</span></span><span style="display:flex;"><span>│   ├── crc16.c
+</span></span><span style="display:flex;"><span>│   ├── crc16.d
+</span></span><span style="display:flex;"><span>│   ├── crc16_slottable.h
+</span></span><span style="display:flex;"><span>│   ├── crc64.c
+</span></span><span style="display:flex;"><span>│   ├── crc64.d
+</span></span><span style="display:flex;"><span>│   ├── crc64.h
+</span></span><span style="display:flex;"><span>│   ├── crccombine.c
+</span></span><span style="display:flex;"><span>│   ├── crccombine.d
+</span></span><span style="display:flex;"><span>│   ├── crccombine.h
+</span></span><span style="display:flex;"><span>│   ├── crcspeed.c
+</span></span><span style="display:flex;"><span>│   ├── crcspeed.d
+</span></span><span style="display:flex;"><span>│   ├── crcspeed.h
+</span></span><span style="display:flex;"><span>│   ├── db.c
+</span></span><span style="display:flex;"><span>│   ├── db.d
+</span></span><span style="display:flex;"><span>│   ├── debug.c
+</span></span><span style="display:flex;"><span>│   ├── debug.d
+</span></span><span style="display:flex;"><span>│   ├── debugmacro.h
+</span></span><span style="display:flex;"><span>│   ├── defrag.c
+</span></span><span style="display:flex;"><span>│   ├── defrag.d
+</span></span><span style="display:flex;"><span>│   ├── dict.c
+</span></span><span style="display:flex;"><span>│   ├── dict.d
+</span></span><span style="display:flex;"><span>│   ├── dict.h
+</span></span><span style="display:flex;"><span>│   ├── ebuckets.c
+</span></span><span style="display:flex;"><span>│   ├── ebuckets.d
+</span></span><span style="display:flex;"><span>│   ├── ebuckets.h
+</span></span><span style="display:flex;"><span>│   ├── endianconv.c
+</span></span><span style="display:flex;"><span>│   ├── endianconv.d
+</span></span><span style="display:flex;"><span>│   ├── endianconv.h
+</span></span><span style="display:flex;"><span>│   ├── eval.c
+</span></span><span style="display:flex;"><span>│   ├── eval.d
+</span></span><span style="display:flex;"><span>│   ├── eventnotifier.c
+</span></span><span style="display:flex;"><span>│   ├── eventnotifier.d
+</span></span><span style="display:flex;"><span>│   ├── eventnotifier.h
+</span></span><span style="display:flex;"><span>│   ├── evict.c
+</span></span><span style="display:flex;"><span>│   ├── evict.d
+</span></span><span style="display:flex;"><span>│   ├── expire.c
+</span></span><span style="display:flex;"><span>│   ├── expire.d
+</span></span><span style="display:flex;"><span>│   ├── fmacros.h
+</span></span><span style="display:flex;"><span>│   ├── fmtargs.h
+</span></span><span style="display:flex;"><span>│   ├── function_lua.c
+</span></span><span style="display:flex;"><span>│   ├── function_lua.d
+</span></span><span style="display:flex;"><span>│   ├── functions.c
+</span></span><span style="display:flex;"><span>│   ├── functions.d
+</span></span><span style="display:flex;"><span>│   ├── functions.h
+</span></span><span style="display:flex;"><span>│   ├── geo.c
+</span></span><span style="display:flex;"><span>│   ├── geo.d
+</span></span><span style="display:flex;"><span>│   ├── geo.h
+</span></span><span style="display:flex;"><span>│   ├── geohash.c
+</span></span><span style="display:flex;"><span>│   ├── geohash.d
+</span></span><span style="display:flex;"><span>│   ├── geohash.h
+</span></span><span style="display:flex;"><span>│   ├── geohash_helper.c
+</span></span><span style="display:flex;"><span>│   ├── geohash_helper.d
+</span></span><span style="display:flex;"><span>│   ├── geohash_helper.h
+</span></span><span style="display:flex;"><span>│   ├── hnsw.d
+</span></span><span style="display:flex;"><span>│   ├── hyperloglog.c
+</span></span><span style="display:flex;"><span>│   ├── hyperloglog.d
+</span></span><span style="display:flex;"><span>│   ├── intset.c
+</span></span><span style="display:flex;"><span>│   ├── intset.d
+</span></span><span style="display:flex;"><span>│   ├── intset.h
+</span></span><span style="display:flex;"><span>│   ├── iothread.c
+</span></span><span style="display:flex;"><span>│   ├── iothread.d
+</span></span><span style="display:flex;"><span>│   ├── kvstore.c
+</span></span><span style="display:flex;"><span>│   ├── kvstore.d
+</span></span><span style="display:flex;"><span>│   ├── kvstore.h
+</span></span><span style="display:flex;"><span>│   ├── latency.c
+</span></span><span style="display:flex;"><span>│   ├── latency.d
+</span></span><span style="display:flex;"><span>│   ├── latency.h
+</span></span><span style="display:flex;"><span>│   ├── lazyfree.c
+</span></span><span style="display:flex;"><span>│   ├── lazyfree.d
+</span></span><span style="display:flex;"><span>│   ├── listpack.c
+</span></span><span style="display:flex;"><span>│   ├── listpack.d
+</span></span><span style="display:flex;"><span>│   ├── listpack.h
+</span></span><span style="display:flex;"><span>│   ├── listpack_malloc.h
+</span></span><span style="display:flex;"><span>│   ├── localtime.c
+</span></span><span style="display:flex;"><span>│   ├── localtime.d
+</span></span><span style="display:flex;"><span>│   ├── logreqres.c
+</span></span><span style="display:flex;"><span>│   ├── logreqres.d
+</span></span><span style="display:flex;"><span>│   ├── lolwut.c
+</span></span><span style="display:flex;"><span>│   ├── lolwut.d
+</span></span><span style="display:flex;"><span>│   ├── lolwut.h
+</span></span><span style="display:flex;"><span>│   ├── lolwut5.c
+</span></span><span style="display:flex;"><span>│   ├── lolwut5.d
+</span></span><span style="display:flex;"><span>│   ├── lolwut6.c
+</span></span><span style="display:flex;"><span>│   ├── lolwut6.d
+</span></span><span style="display:flex;"><span>│   ├── lzf.h
+</span></span><span style="display:flex;"><span>│   ├── lzfP.h
+</span></span><span style="display:flex;"><span>│   ├── lzf_c.c
+</span></span><span style="display:flex;"><span>│   ├── lzf_c.d
+</span></span><span style="display:flex;"><span>│   ├── lzf_d.c
+</span></span><span style="display:flex;"><span>│   ├── lzf_d.d
+</span></span><span style="display:flex;"><span>│   ├── memtest.c
+</span></span><span style="display:flex;"><span>│   ├── memtest.d
+</span></span><span style="display:flex;"><span>│   ├── mkreleasehdr.sh
+</span></span><span style="display:flex;"><span>│   ├── module.c
+</span></span><span style="display:flex;"><span>│   ├── module.d
+</span></span><span style="display:flex;"><span>│   ├── modules
+</span></span><span style="display:flex;"><span>│   ├── monotonic.c
+</span></span><span style="display:flex;"><span>│   ├── monotonic.d
+</span></span><span style="display:flex;"><span>│   ├── monotonic.h
+</span></span><span style="display:flex;"><span>│   ├── mstr.c
+</span></span><span style="display:flex;"><span>│   ├── mstr.d
+</span></span><span style="display:flex;"><span>│   ├── mstr.h
+</span></span><span style="display:flex;"><span>│   ├── mt19937-64.c
+</span></span><span style="display:flex;"><span>│   ├── mt19937-64.d
+</span></span><span style="display:flex;"><span>│   ├── mt19937-64.h
+</span></span><span style="display:flex;"><span>│   ├── multi.c
+</span></span><span style="display:flex;"><span>│   ├── multi.d
+</span></span><span style="display:flex;"><span>│   ├── networking.c
+</span></span><span style="display:flex;"><span>│   ├── networking.d
+</span></span><span style="display:flex;"><span>│   ├── notify.c
+</span></span><span style="display:flex;"><span>│   ├── notify.d
+</span></span><span style="display:flex;"><span>│   ├── object.c
+</span></span><span style="display:flex;"><span>│   ├── object.d
+</span></span><span style="display:flex;"><span>│   ├── pqsort.c
+</span></span><span style="display:flex;"><span>│   ├── pqsort.d
+</span></span><span style="display:flex;"><span>│   ├── pqsort.h
+</span></span><span style="display:flex;"><span>│   ├── pubsub.c
+</span></span><span style="display:flex;"><span>│   ├── pubsub.d
+</span></span><span style="display:flex;"><span>│   ├── quicklist.c
+</span></span><span style="display:flex;"><span>│   ├── quicklist.d
+</span></span><span style="display:flex;"><span>│   ├── quicklist.h
+</span></span><span style="display:flex;"><span>│   ├── rand.c
+</span></span><span style="display:flex;"><span>│   ├── rand.d
+</span></span><span style="display:flex;"><span>│   ├── rand.h
+</span></span><span style="display:flex;"><span>│   ├── rax.c
+</span></span><span style="display:flex;"><span>│   ├── rax.d
+</span></span><span style="display:flex;"><span>│   ├── rax.h
+</span></span><span style="display:flex;"><span>│   ├── rax_malloc.h
+</span></span><span style="display:flex;"><span>│   ├── rdb.c
+</span></span><span style="display:flex;"><span>│   ├── rdb.d
+</span></span><span style="display:flex;"><span>│   ├── rdb.h
+</span></span><span style="display:flex;"><span>│   ├── redis-benchmark
+</span></span><span style="display:flex;"><span>│   ├── redis-benchmark.c
+</span></span><span style="display:flex;"><span>│   ├── redis-benchmark.d
+</span></span><span style="display:flex;"><span>│   ├── redis-check-aof
+</span></span><span style="display:flex;"><span>│   ├── redis-check-aof.c
+</span></span><span style="display:flex;"><span>│   ├── redis-check-aof.d
+</span></span><span style="display:flex;"><span>│   ├── redis-check-rdb
+</span></span><span style="display:flex;"><span>│   ├── redis-check-rdb.c
+</span></span><span style="display:flex;"><span>│   ├── redis-check-rdb.d
+</span></span><span style="display:flex;"><span>│   ├── redis-cli
+</span></span><span style="display:flex;"><span>│   ├── redis-cli.c
+</span></span><span style="display:flex;"><span>│   ├── redis-cli.d
+</span></span><span style="display:flex;"><span>│   ├── redis-sentinel
+</span></span><span style="display:flex;"><span>│   ├── redis-server
+</span></span><span style="display:flex;"><span>│   ├── redis-trib.rb
+</span></span><span style="display:flex;"><span>│   ├── redisassert.c
+</span></span><span style="display:flex;"><span>│   ├── redisassert.d
+</span></span><span style="display:flex;"><span>│   ├── redisassert.h
+</span></span><span style="display:flex;"><span>│   ├── redismodule.h
+</span></span><span style="display:flex;"><span>│   ├── release.c
+</span></span><span style="display:flex;"><span>│   ├── release.d
+</span></span><span style="display:flex;"><span>│   ├── release.h
+</span></span><span style="display:flex;"><span>│   ├── replication.c
+</span></span><span style="display:flex;"><span>│   ├── replication.d
+</span></span><span style="display:flex;"><span>│   ├── resp_parser.c
+</span></span><span style="display:flex;"><span>│   ├── resp_parser.d
+</span></span><span style="display:flex;"><span>│   ├── resp_parser.h
+</span></span><span style="display:flex;"><span>│   ├── rio.c
+</span></span><span style="display:flex;"><span>│   ├── rio.d
+</span></span><span style="display:flex;"><span>│   ├── rio.h
+</span></span><span style="display:flex;"><span>│   ├── script.c
+</span></span><span style="display:flex;"><span>│   ├── script.d
+</span></span><span style="display:flex;"><span>│   ├── script.h
+</span></span><span style="display:flex;"><span>│   ├── script_lua.c
+</span></span><span style="display:flex;"><span>│   ├── script_lua.d
+</span></span><span style="display:flex;"><span>│   ├── script_lua.h
+</span></span><span style="display:flex;"><span>│   ├── sds.c
+</span></span><span style="display:flex;"><span>│   ├── sds.d
+</span></span><span style="display:flex;"><span>│   ├── sds.h
+</span></span><span style="display:flex;"><span>│   ├── sdsalloc.h
+</span></span><span style="display:flex;"><span>│   ├── sentinel.c
+</span></span><span style="display:flex;"><span>│   ├── sentinel.d
+</span></span><span style="display:flex;"><span>│   ├── server.c
+</span></span><span style="display:flex;"><span>│   ├── server.d
+</span></span><span style="display:flex;"><span>│   ├── server.h
+</span></span><span style="display:flex;"><span>│   ├── setcpuaffinity.c
+</span></span><span style="display:flex;"><span>│   ├── setcpuaffinity.d
+</span></span><span style="display:flex;"><span>│   ├── setproctitle.c
+</span></span><span style="display:flex;"><span>│   ├── setproctitle.d
+</span></span><span style="display:flex;"><span>│   ├── sha1.c
+</span></span><span style="display:flex;"><span>│   ├── sha1.d
+</span></span><span style="display:flex;"><span>│   ├── sha1.h
+</span></span><span style="display:flex;"><span>│   ├── sha256.c
+</span></span><span style="display:flex;"><span>│   ├── sha256.d
+</span></span><span style="display:flex;"><span>│   ├── sha256.h
+</span></span><span style="display:flex;"><span>│   ├── siphash.c
+</span></span><span style="display:flex;"><span>│   ├── siphash.d
+</span></span><span style="display:flex;"><span>│   ├── slowlog.c
+</span></span><span style="display:flex;"><span>│   ├── slowlog.d
+</span></span><span style="display:flex;"><span>│   ├── slowlog.h
+</span></span><span style="display:flex;"><span>│   ├── socket.c
+</span></span><span style="display:flex;"><span>│   ├── socket.d
+</span></span><span style="display:flex;"><span>│   ├── solarisfixes.h
+</span></span><span style="display:flex;"><span>│   ├── sort.c
+</span></span><span style="display:flex;"><span>│   ├── sort.d
+</span></span><span style="display:flex;"><span>│   ├── sparkline.c
+</span></span><span style="display:flex;"><span>│   ├── sparkline.d
+</span></span><span style="display:flex;"><span>│   ├── sparkline.h
+</span></span><span style="display:flex;"><span>│   ├── stream.h
+</span></span><span style="display:flex;"><span>│   ├── strl.c
+</span></span><span style="display:flex;"><span>│   ├── strl.d
+</span></span><span style="display:flex;"><span>│   ├── syncio.c
+</span></span><span style="display:flex;"><span>│   ├── syncio.d
+</span></span><span style="display:flex;"><span>│   ├── syscheck.c
+</span></span><span style="display:flex;"><span>│   ├── syscheck.d
+</span></span><span style="display:flex;"><span>│   ├── syscheck.h
+</span></span><span style="display:flex;"><span>│   ├── t_hash.c
+</span></span><span style="display:flex;"><span>│   ├── t_hash.d
+</span></span><span style="display:flex;"><span>│   ├── t_list.c
+</span></span><span style="display:flex;"><span>│   ├── t_list.d
+</span></span><span style="display:flex;"><span>│   ├── t_set.c
+</span></span><span style="display:flex;"><span>│   ├── t_set.d
+</span></span><span style="display:flex;"><span>│   ├── t_stream.c
+</span></span><span style="display:flex;"><span>│   ├── t_stream.d
+</span></span><span style="display:flex;"><span>│   ├── t_string.c
+</span></span><span style="display:flex;"><span>│   ├── t_string.d
+</span></span><span style="display:flex;"><span>│   ├── t_zset.c
+</span></span><span style="display:flex;"><span>│   ├── t_zset.d
+</span></span><span style="display:flex;"><span>│   ├── testhelp.h
+</span></span><span style="display:flex;"><span>│   ├── threads_mngr.c
+</span></span><span style="display:flex;"><span>│   ├── threads_mngr.d
+</span></span><span style="display:flex;"><span>│   ├── threads_mngr.h
+</span></span><span style="display:flex;"><span>│   ├── timeout.c
+</span></span><span style="display:flex;"><span>│   ├── timeout.d
+</span></span><span style="display:flex;"><span>│   ├── tls.c
+</span></span><span style="display:flex;"><span>│   ├── tls.d
+</span></span><span style="display:flex;"><span>│   ├── tracking.c
+</span></span><span style="display:flex;"><span>│   ├── tracking.d
+</span></span><span style="display:flex;"><span>│   ├── unix.c
+</span></span><span style="display:flex;"><span>│   ├── unix.d
+</span></span><span style="display:flex;"><span>│   ├── util.c
+</span></span><span style="display:flex;"><span>│   ├── util.d
+</span></span><span style="display:flex;"><span>│   ├── util.h
+</span></span><span style="display:flex;"><span>│   ├── valgrind.sup
+</span></span><span style="display:flex;"><span>│   ├── version.h
+</span></span><span style="display:flex;"><span>│   ├── vset.d
+</span></span><span style="display:flex;"><span>│   ├── ziplist.c
+</span></span><span style="display:flex;"><span>│   ├── ziplist.d
+</span></span><span style="display:flex;"><span>│   ├── ziplist.h
+</span></span><span style="display:flex;"><span>│   ├── zipmap.c
+</span></span><span style="display:flex;"><span>│   ├── zipmap.d
+</span></span><span style="display:flex;"><span>│   ├── zipmap.h
+</span></span><span style="display:flex;"><span>│   ├── zmalloc.c
+</span></span><span style="display:flex;"><span>│   ├── zmalloc.d
+</span></span><span style="display:flex;"><span>│   └── zmalloc.h
+</span></span><span style="display:flex;"><span>├── tests
+</span></span><span style="display:flex;"><span>│   ├── README.md
+</span></span><span style="display:flex;"><span>│   ├── assets
+</span></span><span style="display:flex;"><span>│   ├── cluster
+</span></span><span style="display:flex;"><span>│   ├── helpers
+</span></span><span style="display:flex;"><span>│   ├── instances.tcl
+</span></span><span style="display:flex;"><span>│   ├── integration
+</span></span><span style="display:flex;"><span>│   ├── modules
+</span></span><span style="display:flex;"><span>│   ├── sentinel
+</span></span><span style="display:flex;"><span>│   ├── support
+</span></span><span style="display:flex;"><span>│   ├── test_helper.tcl
+</span></span><span style="display:flex;"><span>│   ├── tmp
+</span></span><span style="display:flex;"><span>│   └── unit
+</span></span><span style="display:flex;"><span>└── utils
+</span></span><span style="display:flex;"><span>    ├── build-static-symbols.tcl
+</span></span><span style="display:flex;"><span>    ├── cluster_fail_time.tcl
+</span></span><span style="display:flex;"><span>    ├── corrupt_rdb.c
+</span></span><span style="display:flex;"><span>    ├── create-cluster
+</span></span><span style="display:flex;"><span>    ├── gen-test-certs.sh
+</span></span><span style="display:flex;"><span>    ├── generate-command-code.py
+</span></span><span style="display:flex;"><span>    ├── generate-commands-json.py
+</span></span><span style="display:flex;"><span>    ├── generate-fmtargs.py
+</span></span><span style="display:flex;"><span>    ├── generate-module-api-doc.rb
+</span></span><span style="display:flex;"><span>    ├── graphs
+</span></span><span style="display:flex;"><span>    ├── hyperloglog
+</span></span><span style="display:flex;"><span>    ├── install_server.sh
+</span></span><span style="display:flex;"><span>    ├── lru
+</span></span><span style="display:flex;"><span>    ├── redis-copy.rb
+</span></span><span style="display:flex;"><span>    ├── redis-sha1.rb
+</span></span><span style="display:flex;"><span>    ├── redis_init_script
+</span></span><span style="display:flex;"><span>    ├── redis_init_script.tpl
+</span></span><span style="display:flex;"><span>    ├── releasetools
+</span></span><span style="display:flex;"><span>    ├── reply_schema_linter.js
+</span></span><span style="display:flex;"><span>    ├── req-res-log-validator.py
+</span></span><span style="display:flex;"><span>    ├── req-res-validator
+</span></span><span style="display:flex;"><span>    ├── speed-regression.tcl
+</span></span><span style="display:flex;"><span>    ├── srandmember
+</span></span><span style="display:flex;"><span>    ├── systemd-redis_multiple_servers@.service
+</span></span><span style="display:flex;"><span>    ├── systemd-redis_server.service
+</span></span><span style="display:flex;"><span>    ├── tracking_collisions.c
+</span></span><span style="display:flex;"><span>    └── whatisdoing.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">35</span> directories, <span style="color:#ae81ff">350</span> files
+</span></span></code></pre></div>
+</article>
+
+            </div>
+        </main>
+    </body></html>
